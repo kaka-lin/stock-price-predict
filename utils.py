@@ -37,6 +37,25 @@ def file_processing(file_path, encode, num_etf):
 
     return np.array(data)
 
+def file_processing_2(file_path, encode=None):
+    data = []
+
+    with open(file_path, encoding=encode) as file:
+        rows = csv.reader(file, delimiter=",")
+        n_row = 0
+
+        for row in rows:
+            if n_row != 0:
+                for i in range(2, len(row)):
+                    data[n_row - 1].append(float(row[i].strip()))
+
+            data.append([])
+            n_row += 1
+
+    del data[-1]
+    return np.array(data)
+
+
 def data_processing(data):
     for i in range(len(data)):
         data[i] = np.reshape(data[i], (-1, 5))
@@ -51,14 +70,26 @@ def data_processing(data):
         Low = np.reshape(Low, (1, -1))
         Close = scaler.fit_transform(data[i][:, 3].reshape(-1,1))
         Close = np.reshape(Close, (1, -1))
+        Volume = scaler.fit_transform(data[i][:, 4].reshape(-1,1))
+        Volume = np.reshape(Volume, (1, -1))
 
         data[i][:, 0] = Open
         data[i][:, 1] = High
         data[i][:, 2] = Low
         data[i][:, 3] = Close
+        data[i][:, 4] = Volume
 
         # Changed data
         for n in range(len(data[i])):
             data[i][n][-2], data[i][n][-1] = data[i][n][-1], data[i][n][-2]
+
+    return data
+
+def data_processing_2(data, scaler):
+    # Normalize data
+    for i in range(len(data[0])):
+        normalize = scaler.fit_transform(data[:, i].reshape(-1, 1))
+        normalize = np.reshape(normalize, (1, -1))
+        data[:, i] = normalize
 
     return data

@@ -4,6 +4,7 @@ from numpy import newaxis
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation, Dropout
 from keras.layers.recurrent import LSTM
+from keras.layers.advanced_activations import LeakyReLU
 from keras.utils import plot_model
 import matplotlib.pyplot as plt
 
@@ -23,26 +24,27 @@ def load_data(data, time_step):
     train = result[:train_size, :]
     validate = result[train_size:, :]
 
-    x_train = train[:, :-1, -1]
+    x_train = train[:, :-1]
     y_train = train[:, -1, -1]
-    x_validate = validate[:, :-1, -1]
+    x_validate = validate[:, :-1]
     y_validate = validate[:, -1, -1]
 
-    x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
-    x_validate = np.reshape(x_validate, (x_validate.shape[0], x_validate.shape[1], 1))
+    x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 5))
+    x_validate = np.reshape(x_validate, (x_validate.shape[0], x_validate.shape[1], 5))
 
     return [x_train, y_train, x_validate, y_validate]
 
 def build_model(units, input_shape=(None, None)):
     model = Sequential()
 
-    model.add(LSTM(units=50,input_shape=input_shape,return_sequences=True))
-    #model.add(Dropout(0.2))
+    model.add(LSTM(units=256,input_shape=input_shape,return_sequences=True))
+    model.add(Dropout(0.3))
 
-    model.add(LSTM(units=128,return_sequences=False))
-    #model.add(Dropout(0.2))
+    model.add(LSTM(units=256,return_sequences=False))
+    model.add(Dropout(0.3))
 
-    model.add(Dense(units=1, activation='linear'))
+    model.add(Dense(units=16, kernel_initializer="uniform", activation='relu'))
+    model.add(Dense(units=1, kernel_initializer="uniform", activation='linear'))
 
     return model
 
@@ -50,13 +52,13 @@ if __name__ == '__main__':
     class_data = file_processing('data/20180331/taetfp.csv', 'big5', 18)
     class_data = data_processing(class_data)
 
-    time_step = 30
+    time_step = 20
     batch_size = 64
+    epochs = 100
 
     x_train, y_train, x_validate, y_validate = load_data(class_data, time_step=time_step)
     print('train: ', x_train.shape, y_train.shape)
     print('validate: ', x_validate.shape, y_validate.shape)
-
 
     input_shape = (x_train.shape[1], x_train.shape[2])
     model = build_model(x_train.shape[1], input_shape)
@@ -64,7 +66,7 @@ if __name__ == '__main__':
     model.summary()
     plot_model(model, to_file='images/model.png', show_shapes=True)
 
-    model.fit(x_train, y_train, batch_size=batch_size, epochs=100, verbose=2)
+    model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=2)
     model.save('model/test_lstm.h5')
 
     train_score = model.evaluate(x_train, y_train, verbose=0)
@@ -90,4 +92,3 @@ if __name__ == '__main__':
     plt.savefig('images/result.png')
 
     plt.show()
-

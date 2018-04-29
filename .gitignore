@@ -17,8 +17,11 @@ venv/
 # data
 tasharep.csv
 tsharep.csv
+*.csv
 
 # model
 model/
 
 vscode-ipynb-py-convert/
+
+
