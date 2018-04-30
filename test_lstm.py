@@ -64,7 +64,7 @@ if __name__ == '__main__':
     model = build_model(x_train.shape[1], input_shape)
     model.compile(loss='mse', optimizer='adam')
     model.summary()
-    plot_model(model, to_file='images/model.png', show_shapes=True)
+    plot_model(model, to_file='images/lstm_mto.png', show_shapes=True)
 
     model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=2)
     model.save('model/test_lstm.h5')

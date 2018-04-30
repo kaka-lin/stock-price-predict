@@ -17,7 +17,7 @@ venv/
 # data
 tasharep.csv
 tsharep.csv
-*.csv
+
 
 # model
 model/
