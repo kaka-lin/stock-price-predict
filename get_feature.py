@@ -16,7 +16,7 @@ def main():
     output = None
     verbose = False
     filepath = os.getcwd()
-    
+
     for o, a in opts:
         if o == "-v":
             verbose = True
@@ -26,7 +26,7 @@ def main():
         elif o in ("-o", "--output"):
             output = a
         elif o in ("-f", "--filepath"):
-            filepath = a        
+            filepath = a
         else:
             assert False, "unhandled option"
 
@@ -51,7 +51,7 @@ def get_feature_data(filepath, encode=None, **argv):
     params = []
     for param in argv:
         params = [i for i, t in argv.items() if t == True]
-    
+
     # abs filepath
     filepath = os.path.abspath(filepath)
     get_date = os.path.basename(filepath)
@@ -75,14 +75,14 @@ def get_feature_data(filepath, encode=None, **argv):
                                              .replace(',','', regex=True)
                                              .astype(int))
     types = set(df.loc[:,"Code"])
-    
+
     if not os.path.exists(save_process_path):
         os.mkdir(save_process_path)
     for t in types:
         str_t = str(int(t))
         t_types = df.loc[df['Code'] == t][params]
         t_types.to_csv(os.path.join(save_process_path, get_date + "_" + str_t + ".csv"), index=False)
-        
+
 def change_columns(*header):
     """
         replace header to English
@@ -106,13 +106,13 @@ if __name__ == "__main__":
     """
     choose = {
         "Code":True,
-        "Date":False,
+        "Date":True,
         "CB": False,
         "Open": True,
         "High": True,
         "Low": True,
         "Close": True,
         "Volumn": True
-    }    
+    }
     filepath = main()
     get_feature_data(filepath, "big5", **choose)
