@@ -19,7 +19,7 @@ tasharep.csv
 tsharep.csv
 
 # model
-model/
+*.h5
 
 vscode-ipynb-py-convert/
 

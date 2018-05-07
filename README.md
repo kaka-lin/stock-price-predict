@@ -1,10 +1,11 @@
 # Predicted stock price
 預測未來一週收盤價，目前嘗試了兩種model
 1. ```many-to-one 預測未來一天```（結果不好又要train很久，放棄)
-2. ```many-to-one 分別預測未來1~5天```
+2. ```many-to-one 分別預測未來1~5天``` (同上)
+3. ```many-to-many 直接預測未來5天```
 
 ## Model
-### many-to-one 分別預測未來1~5天
+### many-to-many 直接預測未來5天
 
 <img src="images/model/lstm_mtm.png">
 
@@ -18,7 +19,7 @@
 & pip3 install -r requirements.txt
 ```
 
-* many-to-many 直接預測未來1~5天
+* many-to-many 直接預測未來5天
 
 ```bash
 & python3 lstm_mtm.py
@@ -26,7 +27,7 @@
 
 ## Result
 
-* many-to-many 直接預測未來1~5天
+* many-to-many 直接預測未來5天
 
     #### 0050
     <img src="images/result/result_lstm_mtm_0050.png">
@@ -39,7 +40,7 @@
 
 ## Score
 
-* many-to-many 直接預測未來1~5天
+* many-to-many 直接預測未來5天
 
     #### current score: ```12.79```
 
