@@ -16,7 +16,7 @@ def file_processing(file_path, encode=None):
         for row in rows:
             if n_row != 0:
                 #column -> 0: code, 1: date
-                for column in range(2, len(row)):
+                for column in range(2, len(row)-1):
                     data[n_row - 1].append(float(row[column].strip()))
 
             data.append([])
@@ -37,9 +37,8 @@ def inverse_normalize_data(data, scaler):
 
     return data
 
-def generate_output(output, model_name='test'):
-    class_list = ['50', '51', '52', '53', '54', '55', '56', '57', '58',
-                  '59', '6201', '6203', '6204', '6208', '690', '692', '701', '713']
+def generate_output(output, model_name, class_list):
+    class_list = class_list
     _output = []
 
     for i in range(len(output)):
@@ -56,7 +55,7 @@ def generate_output(output, model_name='test'):
                 _output[i].append(-1)
                 _output[i].append(output[i][j+1])
 
-    file_path = 'outputs/{}/output_3.csv'.format(model_name)
+    file_path = 'outputs/output_{}.csv'.format(model_name)
     if not os.path.exists(os.path.dirname(file_path)):
         try:
             os.makedirs(os.path.dirname(file_path))

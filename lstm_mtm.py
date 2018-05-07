@@ -16,7 +16,6 @@ from sklearn.preprocessing import MinMaxScaler
 
 from utils import *
 
-
 def load_data(data, time_step=20, after_day=1, validate_percent=0.67):
     seq_length = time_step + after_day
     result = []
@@ -37,22 +36,20 @@ def load_data(data, time_step=20, after_day=1, validate_percent=0.67):
 
     return [x_train, y_train, x_validate, y_validate]
 
-
 def base_model(feature_len=1, after_day=1, input_shape=(20, 1)):
     model = Sequential()
 
     model.add(LSTM(units=100, return_sequences=False, input_shape=input_shape))
-    model.add(Dropout(0.3))
+    #model.add(LSTM(units=100, return_sequences=False, input_shape=input_shape))
 
     # one to many
     model.add(RepeatVector(after_day))
     model.add(LSTM(200, return_sequences=True))
-    model.add(Dropout(0.3))
+    #model.add(LSTM(50, return_sequences=True))
 
     model.add(TimeDistributed(Dense(units=feature_len, activation='linear')))
 
     return model
-
 
 if __name__ == '__main__':
     class_list = ['50', '51', '52', '53', '54', '55', '56', '57', '58',
@@ -70,20 +67,20 @@ if __name__ == '__main__':
     model_name = sys.argv[0].replace(".py", "")
 
     for index in range(len(class_list)):
-        _class = class_list[2]
+        _class = class_list[index]
         print('******************************************* class 00{} *******************************************'.format(_class))
 
         # read data from csv, return data: (Samples, feature)
         data = file_processing(
             'data/20180427_process/20180427_{}.csv'.format(_class))
-
-        # test data: last 20 day data
-        x_test = data[-time_step:]
-        x_test = np.reshape(x_test, (1, x_test.shape[0], x_test.shape[1]))
+        feature_len = data.shape[1]
 
         # normalize data
-        feature_len = data.shape[1]
         data = normalize_data(data, scaler, feature_len)
+
+        # test data
+        x_test = data[-time_step:]
+        x_test = np.reshape(x_test, (1, x_test.shape[0], x_test.shape[1]))
 
         # get train and validate data
         x_train, y_train, x_validate, y_validate = load_data(
@@ -97,7 +94,7 @@ if __name__ == '__main__':
         model = base_model(feature_len, after_day, input_shape)
         model.compile(loss='mse', optimizer='adam')
         model.summary()
-        plot_model_architecture(model, model_name=model_name)
+        #plot_model_architecture(model, model_name=model_name)
 
         # Add Tensorboard
         #tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
@@ -130,15 +127,17 @@ if __name__ == '__main__':
         y_validate = inverse_normalize_data(y_validate, scaler)
         test_predict = inverse_normalize_data(test_predict, scaler)
 
+        '''
         print('-' * 100)
         print("last y_validate: \n", y_validate[-1])
         print("last y_predict: \n", validate_predict[-1])
         print("test: \n", test_predict)
+        '''
 
         # 3 or 0: close 的位置, 0:5為五天
         ans = np.append(y_validate[-1, -1, 3], test_predict[-1, 0:5, 3])
         output.append(ans)
-        print("output: \n", output)
+        #print("output: \n", output)
 
         # plot predict situation (save in images/result)
         file_name = 'resule_' + model_name + '_00{}'.format(_class)
@@ -148,7 +147,6 @@ if __name__ == '__main__':
         file_name = 'loss_' + model_name + '_00{}'.format(_class)
         plot_loss(history, file_name)
 
-        break
-
-    #output = np.array(output)
-    #generate_output(output, model_name='model-3')
+    output = np.array(output)
+    print(output)
+    generate_output(output, model_name=model_name, class_list=class_list)
