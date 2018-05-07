@@ -140,7 +140,7 @@ if __name__ == '__main__':
         #print("output: \n", output)
 
         # plot predict situation (save in images/result)
-        file_name = 'resule_' + model_name + '_00{}'.format(_class)
+        file_name = 'result_' + model_name + '_00{}'.format(_class)
         plot_predict(y_validate, validate_predict, file_name=file_name)
 
         # plot loss (save in images/loss)
