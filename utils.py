@@ -16,7 +16,7 @@ def file_processing(file_path, encode=None):
         for row in rows:
             if n_row != 0:
                 #column -> 0: code, 1: date
-                for column in range(2, len(row)-1):
+                for column in range(2, len(row)):
                     data[n_row - 1].append(float(row[column].strip()))
 
             data.append([])
