@@ -71,6 +71,7 @@ def get_feature_data(filepath, encode=None, **argv):
             data.append(new_index)
 
     df = pd.DataFrame(data=data[1:], columns=change_columns(*data[0]))
+    df = df.dropna()
     df["Volumn"] = pd.to_numeric(df["Volumn"].replace('\.','', regex=True)
                                              .replace(',','', regex=True)
                                              .astype(int))

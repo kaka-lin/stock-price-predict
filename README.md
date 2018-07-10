@@ -3,6 +3,8 @@
 1. ```many-to-one 預測未來一天```（結果不好又要train很久，放棄)
 2. ```many-to-one 分別預測未來1~5天``` (同上)
 3. ```many-to-many 直接預測未來5天```
+4. ```seq2seq```
+5. ```seq2seq + attention```
 
 ## Model
 ### many-to-many 直接預測未來5天

@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
         # read data from csv, return data: (Samples, feature)
         data = file_processing(
-            'data/20180427_process/20180427_{}.csv'.format(_class))
+            'data/20180525_process/20180525_{}.csv'.format(_class))
         feature_len = data.shape[1]
 
         # normalize data
@@ -148,5 +148,5 @@ if __name__ == '__main__':
         plot_loss(history, file_name)
 
     output = np.array(output)
-    print(output)
+    #print(output)
     generate_output(output, model_name=model_name, class_list=class_list)
