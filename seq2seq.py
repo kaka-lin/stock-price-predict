@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
         # read data from csv, return data: (Samples, feature)
         data = file_processing(
-            'data/20180427_process/20180427_{}.csv'.format(_class))
+            'data/20180601_process/20180601_{}.csv'.format(_class))
         feature_len = data.shape[1]
 
         # normalize data
